@@ -9,11 +9,43 @@ public class PartCategory {
     @SequenceGenerator(name="PART_CATEGORY_SEQ_GEN", sequenceName = "PART_CATEGORY_SEQ", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PART_CATEGORY_SEQ_GEN")
     int id;
-    int partId;
-    String categoryName;
+    final int partId;
+    final String categoryName;
+    int hashCode;
 
     public PartCategory(int partId, String categoryName){
         this.partId = partId;
         this.categoryName = categoryName;
+        hashCode = -1;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getPartId() {
+        return partId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.partId == ((PartCategory)obj).getPartId()
+                && this.categoryName.equals(((PartCategory)obj).getCategoryName());
+    }
+
+    @Override
+    public int hashCode() {
+        if(hashCode == -1) {
+            final int prime = 43;
+            int result = 41;
+            result = prime * result + partId;
+            result = prime * result + (categoryName == null ? 0 : categoryName.hashCode());
+            hashCode = result;
+        }
+        return hashCode;
     }
 }

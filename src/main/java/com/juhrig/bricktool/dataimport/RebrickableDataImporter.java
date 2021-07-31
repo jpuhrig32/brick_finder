@@ -1,19 +1,18 @@
 package com.juhrig.bricktool.dataimport;
 
-import com.juhrig.bricktool.carts.BrickCart;
 import com.juhrig.bricktool.dto.*;
+import org.springframework.context.annotation.Import;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class RebrickableDataImporter {
+
 
 
     protected List<Brick> readBrickCsv(List<String[]> lines){
@@ -80,9 +79,9 @@ public class RebrickableDataImporter {
 
     protected List<Part> readPartCsv(List<String[]> lines){
         return lines.stream()
-                .filter(line -> line.length == 2)
+                .filter(line -> line.length == 4)
                 .map(line ->{
-                    return new Part(Integer.parseInt(line[0]), line[1],Integer.parseInt(line[2]), line[3]);
+                    return new Part(line[0], line[1],Integer.parseInt(line[2]), line[3]);
                 })
                 .collect(Collectors.toList());
     }
@@ -116,9 +115,9 @@ public class RebrickableDataImporter {
 
     protected List<Theme> readThemeCsv(List<String[]> lines){
         return lines.stream()
-                .filter(line -> line.length == 5)
+                .filter(line -> line.length == 3)
                 .map(line ->{
-                    return new Theme(Integer.parseInt(line[0]),line[1],Integer.parseInt(line[2]));
+                    return new Theme(Integer.parseInt(line[0]),line[1], ImportUtils.parseIntegerOrNull(line[2]));
                 })
                 .collect(Collectors.toList());
     }
@@ -128,7 +127,10 @@ public class RebrickableDataImporter {
     protected List<String[]> readCsvLines(InputStream fileInput){
         BufferedReader br = new BufferedReader(new InputStreamReader(fileInput));
         List<String[]> lines = br.lines()
-                .map(line -> {return line.split(",");})
+                .map(line -> {
+                    List<String> sl = ImportUtils.splitLineOnDelimiter(line, ',');
+                    return sl.toArray(new String[sl.size()]);
+                })
                 .collect(Collectors.toList());
         lines.remove(0);
 
