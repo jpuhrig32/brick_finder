@@ -5,13 +5,13 @@ import javax.persistence.*;
 @Entity(name="inventory_minifig")
 public class InventoryMinifig {
 
+
     @Id
-    @SequenceGenerator(name="INVENTORY_MINIFIG_SEQ_GEN", sequenceName = "INVENTORY_MINIFIG_SEQ", allocationSize = 50)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="INVENTORY_MINIFIG_SEQ_GEN")
-    private int id;
     final int inventoryId;
     final String minifigNumber;
     final int quantity;
+
+    @Transient
     int hashCode;
 
     public InventoryMinifig(int inventoryId, String minifigNumber, int quantity){
@@ -21,9 +21,6 @@ public class InventoryMinifig {
         hashCode = -1;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public int getInventoryId() {
         return inventoryId;

@@ -6,9 +6,6 @@ import javax.persistence.*;
 public class Element {
 
     @Id
-    @SequenceGenerator(name="ELEMENT_SEQ_GEN", sequenceName = "ELEMENT_SEQ", allocationSize = 50)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ELEMENT_SEQ_GEN")
-    int id;
     final int elementId;
     final String partNum;
     final int colorId;
@@ -20,10 +17,6 @@ public class Element {
         this.partNum = partNum;
         this.colorId = colorId;
         hashCode = -1;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getElementId() {

@@ -6,21 +6,16 @@ import javax.persistence.*;
 public class PartCategory {
 
     @Id
-    @SequenceGenerator(name="PART_CATEGORY_SEQ_GEN", sequenceName = "PART_CATEGORY_SEQ", allocationSize = 50)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PART_CATEGORY_SEQ_GEN")
-    int id;
     final int partId;
     final String categoryName;
+
+    @Transient
     int hashCode;
 
     public PartCategory(int partId, String categoryName){
         this.partId = partId;
         this.categoryName = categoryName;
         hashCode = -1;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getPartId() {

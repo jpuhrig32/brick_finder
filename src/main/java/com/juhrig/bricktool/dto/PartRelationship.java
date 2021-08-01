@@ -6,9 +6,9 @@ import javax.persistence.*;
 public class PartRelationship {
 
     @Id
-    @SequenceGenerator(name="PART_RELATIONSHIP_SEQ_GEN", sequenceName = "PART_RELATIONSHIP_SEQ", allocationSize = 50)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PART_RELATIONSHIP_SEQ_GEN")
-    int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     final String relationshipType;
     final String childPartNumber;
     final String parentPartNumber;
@@ -19,10 +19,6 @@ public class PartRelationship {
         this.childPartNumber = childPartNumber;
         this.parentPartNumber = parentPartNumber;
         hashCode = -1;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getRelationshipType() {

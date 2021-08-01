@@ -4,13 +4,13 @@ import javax.persistence.*;
 
 @Entity(name="minifig")
 public class Minifig {
+
     @Id
-    @SequenceGenerator(name="MINIFIG_SEQ_GEN", sequenceName = "MINIFIG_SEQ", allocationSize = 50)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="MINIFIG_SEQ_GEN")
-    int id;
     final String minifigId;
     final String name;
     final int numParts;
+
+    @Transient
     int hashCode;
 
     public Minifig(String minifigId, String name, int numParts){
@@ -18,10 +18,6 @@ public class Minifig {
         this.name = name;
         this.numParts = numParts;
         hashCode = -1;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getMinifigId() {

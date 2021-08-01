@@ -4,13 +4,13 @@ import javax.persistence.*;
 
 @Entity(name="inventory")
 public class Inventory {
+
     @Id
-    @SequenceGenerator(name="INVENTORY_SEQ_GEN", sequenceName = "INVENTORY_SEQ", allocationSize = 50)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="INVENTORY_SEQ_GEN")
-    int id;
     final int inventoryId;
     final int version;
     final String setNumber;
+
+    @Transient
     int hashCode;
 
     public Inventory(int inventoryId, int version, String setNumber){
@@ -18,10 +18,6 @@ public class Inventory {
         this.version = version;
         this.setNumber = setNumber;
         hashCode = -1;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getInventoryId() {

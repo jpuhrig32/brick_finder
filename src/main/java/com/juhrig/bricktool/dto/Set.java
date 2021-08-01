@@ -1,19 +1,21 @@
 package com.juhrig.bricktool.dto;
 
+import com.juhrig.bricktool.datasource.repositories.InventoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 
 @Entity(name="set")
 public class Set 
 {
     @Id
-    @SequenceGenerator(name="SET_SEQ_GEN", sequenceName = "SET_SEQ", allocationSize = 50)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="SET_SEQ_GEN")
-    int id;
     final String setNumber;
     final String name;
     final int year;
     final int themeId;
     final int numParts;
+
+    @Transient
     int hashCode;
 
     public Set(String setNumber, String name, int year, int themeId, int numParts){
@@ -23,10 +25,6 @@ public class Set
         this.themeId = themeId;
         this.numParts = numParts;
         hashCode = -1;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getSetNumber() {

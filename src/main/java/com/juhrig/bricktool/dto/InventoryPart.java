@@ -6,14 +6,13 @@ import javax.persistence.*;
 public class InventoryPart {
 
     @Id
-    @SequenceGenerator(name="INVENTORY_PART_SEQ_GEN", sequenceName = "INVENTORY_PART_SEQ", allocationSize = 50)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="INVENTORY_PART_SEQ_GEN")
-    int id;
     final int inventoryId;
     final String partNumber;
     final String colorId;
     final int quantity;
     final boolean isSpare;
+
+    @Transient
     int hashCode;
 
     public InventoryPart(int inventoryId, String partNumber, String colorId, int quantity, boolean isSpare){
@@ -25,9 +24,6 @@ public class InventoryPart {
         hashCode = -1;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public int getInventoryId() {
         return inventoryId;
