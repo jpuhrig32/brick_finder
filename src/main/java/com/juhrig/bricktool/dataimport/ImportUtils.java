@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ImportUtils {
-    private static Logger LOG = LoggerFactory.getLogger(ImportUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImportUtils.class);
     /*
     Basic CSV handling function, respects commas in quotes
      */

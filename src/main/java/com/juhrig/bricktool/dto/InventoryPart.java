@@ -1,16 +1,20 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.data.relational.core.sql.In;
+
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Entity(name="inventory_part")
-public class InventoryPart {
+public class InventoryPart implements Comparable<InventoryPart>{
 
     @Id
-    final int inventoryId;
     final String partNumber;
+    final int inventoryId;
     final String colorId;
-    final int quantity;
-    final boolean isSpare;
+    int quantity;
+    boolean isSpare;
 
     @Transient
     int hashCode;
@@ -24,6 +28,9 @@ public class InventoryPart {
         hashCode = -1;
     }
 
+    public InventoryPart(InventoryPart parentPart, int quantity){
+        this(parentPart.getInventoryId(), parentPart.getPartNumber(), parentPart.colorId, quantity, false);
+    }
 
     public int getInventoryId() {
         return inventoryId;
@@ -45,12 +52,25 @@ public class InventoryPart {
         return isSpare;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setSpare(boolean spare) {
+        isSpare = spare;
+    }
+
+
+    public boolean isSamePart(InventoryPart toCompare){
+        return (this.inventoryId == toCompare.getInventoryId()
+                && this.partNumber.equals(toCompare.getPartNumber())
+                && this.colorId.equals(toCompare.getColorId()));
+    }
+
     @Override
     public boolean equals(Object obj) {
         return (
-                this.inventoryId == ((InventoryPart)obj).getInventoryId()
-                && this.partNumber.equals(((InventoryPart)obj).getPartNumber())
-                && this.colorId.equals(((InventoryPart)obj).getColorId())
+                isSamePart((InventoryPart)obj)
                 &&this.quantity == ((InventoryPart)obj).getQuantity()
                 &&this.isSpare == ((InventoryPart)obj).isSpare()
                 );
@@ -62,12 +82,16 @@ public class InventoryPart {
             final int prime = 73;
             int result = 101;
             result = prime * result + inventoryId;
-            result = prime * result + quantity;
             result = prime * result + (isSpare ? 0 : 1);
             result = prime * result + (colorId == null ? 0 : colorId.hashCode());
             result = prime * result + (partNumber == null ? 0 : partNumber.hashCode());
             hashCode = result;
         }
         return hashCode;
+    }
+
+    @Override
+    public int compareTo(InventoryPart o) {
+        return this.partNumber.compareTo(o.getPartNumber());
     }
 }

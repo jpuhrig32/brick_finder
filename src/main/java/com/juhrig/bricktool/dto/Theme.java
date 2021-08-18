@@ -1,5 +1,8 @@
 package com.juhrig.bricktool.dto;
 
+import com.juhrig.bricktool.datasource.repositories.ThemeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 
 @Entity(name="theme")
@@ -12,6 +15,13 @@ public class Theme {
 
     @Transient
     int hashCode;
+
+    @Transient
+    Theme parentTheme;
+
+    @Autowired
+    @Transient
+    ThemeRepository themeRepository;
 
     public Theme(int themeId, String themeName, Integer parentId){
         this.themeId = themeId;
@@ -30,6 +40,13 @@ public class Theme {
 
     public Integer getParentId() {
         return parentId;
+    }
+
+    public Theme getParentTheme() {
+        if(parentTheme == null){
+            parentTheme = themeRepository.getById(parentId);
+        }
+        return parentTheme;
     }
 
     @Override

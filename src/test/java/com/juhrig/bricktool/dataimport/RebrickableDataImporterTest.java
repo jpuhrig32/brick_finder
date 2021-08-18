@@ -39,7 +39,7 @@ class RebrickableDataImporterTest {
 
 
         List<Color> testObjects = rdi.readColorCsv(lines);
-
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 
@@ -69,7 +69,7 @@ class RebrickableDataImporterTest {
 
 
         List<Element> testObjects = rdi.readElementCsv(lines);
-
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 
@@ -99,7 +99,7 @@ class RebrickableDataImporterTest {
 
 
         List<Inventory> testObjects = rdi.readInventoryCsv(lines);
-
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 
@@ -129,7 +129,36 @@ class RebrickableDataImporterTest {
 
 
         List<InventoryMinifig> testObjects = rdi.readInventoryMinifigCsv(lines);
+        assertEquals(expectedObjectCount, testObjects.size());
+        compareLists(expectedObjects, testObjects);
+    }
 
+    @Test
+    void readInventoryPartCsv(){
+        int expectedObjectCount = 5;
+        InventoryPart[] expectedObjectsArray = new InventoryPart[]{
+                new InventoryPart(1, "48379c01", "72", 1, false),
+                new InventoryPart(1, "48395", "7", 1, false),
+                new InventoryPart(1, "stickerupn0077", "9999", 1, false),
+                new InventoryPart(1, "upn0342", "0", 1, false),
+                new InventoryPart(1, "upn0350", "25", 1, false),
+        };
+        List<InventoryPart> expectedObjects = Arrays.asList(expectedObjectsArray);
+
+        String exampleCsv = "inventory_id,part_num,color_id,quantity,is_spare\n" +
+                "1,48379c01,72,1,f\n" +
+                "1,48395,7,1,f\n" +
+                "1,stickerupn0077,9999,1,f\n" +
+                "1,upn0342,0,1,f\n" +
+                "1,upn0350,25,1,f";
+
+        InputStream testStream = new ByteArrayInputStream(exampleCsv.getBytes(StandardCharsets.UTF_8));
+
+        RebrickableDataImporter rdi = new RebrickableDataImporter();
+        List<String[]> lines = rdi.readCsvLines(testStream);
+        List<InventoryPart> testObjects = rdi.readInventoryPartCsv(lines);
+
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 
@@ -159,7 +188,7 @@ class RebrickableDataImporterTest {
 
 
         List<InventorySet> testObjects = rdi.readInventorySetCsv(lines);
-
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 
@@ -187,6 +216,8 @@ class RebrickableDataImporterTest {
         RebrickableDataImporter rdi = new RebrickableDataImporter();
         List<String[]> lines = rdi.readCsvLines(testStream);
         List<Minifig> testObjects = rdi.readMinifigCsv(lines);
+
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 
@@ -214,6 +245,8 @@ class RebrickableDataImporterTest {
         RebrickableDataImporter rdi = new RebrickableDataImporter();
         List<String[]> lines = rdi.readCsvLines(testStream);
         List<Part> testObjects = rdi.readPartCsv(lines);
+
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
 
     }
@@ -243,6 +276,8 @@ class RebrickableDataImporterTest {
         RebrickableDataImporter rdi = new RebrickableDataImporter();
         List<String[]> lines = rdi.readCsvLines(testStream);
         List<PartCategory> testObjects = rdi.readPartCategoryCsv(lines);
+
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
 
     }
@@ -272,6 +307,8 @@ class RebrickableDataImporterTest {
         RebrickableDataImporter rdi = new RebrickableDataImporter();
         List<String[]> lines = rdi.readCsvLines(testStream);
         List<PartRelationship> testObjects = rdi.readPartRelationshipCsv(lines);
+
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 
@@ -300,6 +337,8 @@ class RebrickableDataImporterTest {
         RebrickableDataImporter rdi = new RebrickableDataImporter();
         List<String[]> lines = rdi.readCsvLines(testStream);
         List<Set> testObjects = rdi.readSetCsv(lines);
+
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 
@@ -329,6 +368,8 @@ class RebrickableDataImporterTest {
         RebrickableDataImporter rdi = new RebrickableDataImporter();
         List<String[]> lines = rdi.readCsvLines(testStream);
         List<Theme> testObjects = rdi.readThemeCsv(lines);
+
+        assertEquals(expectedObjectCount, testObjects.size());
         compareLists(expectedObjects, testObjects);
     }
 

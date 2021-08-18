@@ -1,28 +1,32 @@
 package com.juhrig.bricktool.carts;
 
+import com.juhrig.bricktool.dto.Brick;
+import com.juhrig.bricktool.dto.InventoryPart;
+
+import javax.persistence.Transient;
 import java.util.*;
 
 
 public class BrickCart {
 
-    List<BrickQuantity> bricks;
-    Map<Integer, BrickQuantity> brickMap;
+    @Transient
+    protected List<InventoryPart> bricks;
+    protected Map<String, InventoryPart> brickMap;
 
     public BrickCart(){
-        bricks = new ArrayList<>();
+        bricks = new ArrayList<InventoryPart>();
         buildBrickMap();
     }
 
-    public BrickCart(List<BrickQuantity> bricks){
+    public BrickCart(List<InventoryPart> bricks){
         this.bricks = bricks;
         buildBrickMap();
     }
 
-
     public BrickCartComparisonResult compareCarts(BrickCart toCompare){
         sortCartContents();
         toCompare.sortCartContents();
-        List<BrickQuantity> compList = toCompare.getBricks();
+        List<InventoryPart> compList = toCompare.getBricks();
 
         int totalPieces = compList.stream().mapToInt(b -> b.getQuantity()).sum();
         int matchingPieces = 0;
@@ -36,27 +40,27 @@ public class BrickCart {
 
 
         while(keepLooping){
-            if(bricks.get(thisIndex).getId() == compList.get(compIndex).getId()){
+            if(bricks.get(thisIndex).isSamePart(compList.get(compIndex))){
                 int matchingQuantity = Math.min(bricks.get(thisIndex).getQuantity(),compList.get(compIndex).getQuantity());
-                matchingPieceCart.addBrick(new BrickQuantity(bricks.get(thisIndex).getId(), matchingQuantity));
+                matchingPieceCart.addBrick(new InventoryPart(bricks.get(thisIndex), matchingQuantity));
                 matchingPieces += matchingQuantity;
                 if(bricks.get(thisIndex).getQuantity() < compList.get(compIndex).getQuantity()){
-                   missingPieceCart.addBrick(new BrickQuantity(bricks.get(thisIndex).getId(), compList.get(compIndex).getQuantity() - bricks.get(thisIndex).getQuantity()));
+                   missingPieceCart.addBrick(new InventoryPart(bricks.get(thisIndex), compList.get(compIndex).getQuantity() - bricks.get(thisIndex).getQuantity()));
                 }
                 compIndex++;
                 thisIndex++;
-                keepLooping = compIndex == compList.size() || thisIndex == bricks.size()? false: true;
+                keepLooping = compIndex != compList.size() && thisIndex != bricks.size();
 
             }
-            else if(bricks.get(thisIndex).getId() > compList.get(compIndex).getId())
+            else if(bricks.get(thisIndex).compareTo(compList.get(compIndex)) <0)
             {
                 missingPieceCart.addBrick(compList.get(compIndex));
                 compIndex++;
-                keepLooping = compIndex == compList.size() ? false: true;
+                keepLooping = compIndex != compList.size();
             }
             else{
                 thisIndex++;
-                keepLooping = thisIndex == bricks.size() ? false: true;
+                keepLooping = thisIndex != bricks.size();
             }
 
         }
@@ -71,15 +75,15 @@ public class BrickCart {
 
     }
 
-    public void addBrick(BrickQuantity toAdd){
-        if(brickMap.containsKey(toAdd.getId())){
-            BrickQuantity foundQuantity = brickMap.get(toAdd.getId());
+    public void addBrick(InventoryPart toAdd){
+        if(brickMap.containsKey(toAdd.getPartNumber())){
+            InventoryPart foundQuantity = brickMap.get(toAdd.getPartNumber());
             int newQuantity = foundQuantity.getQuantity() + toAdd.getQuantity();
             foundQuantity.setQuantity(newQuantity);
         }
         else{
             bricks.add(toAdd);
-            brickMap.put(toAdd.getId(), toAdd);
+            brickMap.put(toAdd.getPartNumber(), toAdd);
         }
     }
 
@@ -88,18 +92,19 @@ public class BrickCart {
                 addBrick(b));
     }
 
-    public List<BrickQuantity> getBricks() {
+    public List<InventoryPart> getBricks() {
         return bricks;
     }
 
-    protected void sortCartContents(){
-        bricks.sort(Comparator.comparing(BrickQuantity::getId));
+
+    public void sortCartContents(){
+       Collections.sort(bricks);
     }
 
     private void buildBrickMap(){
-        brickMap = new LinkedHashMap<>();
+        brickMap = new LinkedHashMap<String, InventoryPart>();
         bricks.stream().forEach(b -> {
-            brickMap.put(b.getId(), b);
+            brickMap.put(b.getPartNumber(), b);
         });
     }
 }

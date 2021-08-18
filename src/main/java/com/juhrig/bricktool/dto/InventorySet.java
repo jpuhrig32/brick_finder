@@ -10,15 +10,22 @@ public class InventorySet {
     final int inventoryId;
     final String setNumber;
     final int quantity;
+    int revision;
     int hashCode;
 
-    public InventorySet(int inventoryId, String minifigNumber, int quantity){
-        this.inventoryId = inventoryId;
-        this.setNumber = minifigNumber;
-        this.quantity = quantity;
-        hashCode = -1;
 
+    public InventorySet(int inventoryId, String setNumber, int quantity){
+        this(inventoryId, setNumber, quantity, 1);
     }
+
+    public InventorySet(int inventoryId, String setNumber, int quantity, int revision){
+        this.inventoryId = inventoryId;
+        this.setNumber = setNumber;
+        this.quantity = quantity;
+        this.hashCode = -1;
+        this.revision = revision;
+    }
+
 
     public int getInventoryId() {
         return inventoryId;
@@ -30,6 +37,10 @@ public class InventorySet {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public int getRevision() {
+        return revision;
     }
 
     @Override
@@ -47,6 +58,7 @@ public class InventorySet {
             int result = 101;
             result = prime * result + inventoryId;
             result = prime * result + quantity;
+            result = prime * result + revision;
             result = prime * result + (setNumber == null ? 0 : setNumber.hashCode());
             hashCode = result;
         }

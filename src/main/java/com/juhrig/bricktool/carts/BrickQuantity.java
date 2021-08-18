@@ -1,6 +1,7 @@
 package com.juhrig.bricktool.carts;
 
 public class BrickQuantity {
+
     private final Integer id;
     private int quantity;
 

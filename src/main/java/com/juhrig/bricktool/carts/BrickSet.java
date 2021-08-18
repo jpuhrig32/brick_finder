@@ -1,19 +1,19 @@
 package com.juhrig.bricktool.carts;
 
+import com.juhrig.bricktool.dto.InventoryPart;
 import com.juhrig.bricktool.dto.Minifig;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrickSet extends BrickCart{
+public class BrickSet extends BrickCart {
 
     private final String displayName;
     private final String idNumber;
     private final String idWithVersion;
-    private final List<BrickQuantity> bricks;
     private final List<Minifig> minifigs;
 
-    public BrickSet(String displayName, String idWithVersion, List<BrickQuantity> bricks, List<Minifig> minifigs){
+    public BrickSet(String displayName, String idWithVersion, List<InventoryPart> bricks, List<Minifig> minifigs){
         super();
         this.displayName = displayName;
         this.idWithVersion = idWithVersion;

@@ -5,10 +5,9 @@ import javax.persistence.*;
 @Entity(name="inventory_minifig")
 public class InventoryMinifig {
 
-
     @Id
-    final int inventoryId;
     final String minifigNumber;
+    final int inventoryId;
     final int quantity;
 
     @Transient

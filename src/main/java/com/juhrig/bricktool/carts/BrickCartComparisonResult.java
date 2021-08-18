@@ -3,8 +3,8 @@ package com.juhrig.bricktool.carts;
 public class BrickCartComparisonResult {
 
     private final double similarity;
-    private BrickCart missingPieces;
-    private BrickCart commonPieces;
+    private final BrickCart missingPieces;
+    private final BrickCart commonPieces;
 
     public BrickCartComparisonResult(double similarity, BrickCart missingPieces, BrickCart commonPieces){
         this.similarity = similarity;
