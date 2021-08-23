@@ -2,26 +2,37 @@ package com.juhrig.bricktool.dto;
 
 import com.juhrig.bricktool.datasource.repositories.ThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
+@Component
 @Entity(name="theme")
 public class Theme {
 
     @Id
-    final int themeId;
-    final String themeName;
-    final Integer parentId;
+    @Column(name="theme_id")
+    protected int themeId;
+    @Column(name="theme_name", length = 128)
+    protected String themeName;
+    @Column(name="parent_theme_id")
+    protected Integer parentId;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
 
-    @Transient
+    /*
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ref_parent_theme_id", referencedColumnName = "theme_id")
     Theme parentTheme;
+
+     */
 
     @Autowired
     @Transient
     ThemeRepository themeRepository;
+
+    public Theme(){}
 
     public Theme(int themeId, String themeName, Integer parentId){
         this.themeId = themeId;
@@ -42,12 +53,15 @@ public class Theme {
         return parentId;
     }
 
+    /*
     public Theme getParentTheme() {
         if(parentTheme == null){
             parentTheme = themeRepository.getById(parentId);
         }
         return parentTheme;
     }
+
+     */
 
     @Override
     public boolean equals(Object obj) {

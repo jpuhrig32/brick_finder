@@ -1,25 +1,38 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
 @Entity(name="element")
+@Table(name="element")
 public class Element {
 
     @Id
-    final int elementId;
-    final String partNum;
-    final int colorId;
-    int hashCode;
+    @Column(name="element_id", length = 32, nullable = false, unique = true)
+    protected String elementId;
+    @Column(name="part_num", length = 32)
+    protected String partNum;
+    @Column(name="color_id")
+    protected int colorId;
 
+    @Transient
+    protected int hashCode;
 
-    public Element(int elementId, String partNum, int colorId){
+    @ManyToOne
+    @JoinColumn(name="color_id_ref", referencedColumnName = "color_id")
+    Color elementColor;
+
+    public Element(){}
+
+    public Element(String elementId, String partNum, int colorId){
         this.elementId = elementId;
         this.partNum = partNum;
         this.colorId = colorId;
         hashCode = -1;
     }
 
-    public int getElementId() {
+    public String getElementId() {
         return elementId;
     }
 
@@ -47,7 +60,7 @@ public class Element {
             final int prime = 13;
             int result = 113;
             result = prime * result + colorId;
-            result = prime * result + elementId;
+            result = prime * result + (elementId == null ? 0 : elementId.hashCode());
             result = prime * result + (partNum == null ? 0 : partNum.hashCode());
             hashCode = result;
         }

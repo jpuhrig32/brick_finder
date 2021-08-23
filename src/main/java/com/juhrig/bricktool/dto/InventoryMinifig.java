@@ -1,17 +1,39 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
+@Component
 @Entity(name="inventory_minifig")
 public class InventoryMinifig {
 
     @Id
-    final String minifigNumber;
-    final int inventoryId;
-    final int quantity;
+    @SequenceGenerator(name="inventory_minifig_id_seq_gen", sequenceName = "inventory_minifig_id_seq", allocationSize = 50,initialValue = 1)
+    // @GeneratedValue(strategy =GenerationType.IDENTITY, generator = "inventory_minifig_id_seq_gen")
+    @Column(name="id", nullable = true)
+    Long id;
+
+    @Column(name="minifig_number", length = 32, nullable = false)
+    protected String minifigNumber;
+    @Column(name="set_inventory_id")
+    protected int inventoryId;
+
+    @Column(name="minifig_quantity")
+    protected int quantity;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
+
+    @ManyToOne
+    @JoinColumn(name="minifig_id")
+    Minifig parentMinifig;
+
+    @ManyToOne
+    @JoinColumn(name="parent_inventory_id", referencedColumnName = "inventory_id")
+    InventorySet parentSet;
+
+    public InventoryMinifig(){}
 
     public InventoryMinifig(int inventoryId, String minifigNumber, int quantity){
         this.inventoryId = inventoryId;
@@ -20,6 +42,9 @@ public class InventoryMinifig {
         hashCode = -1;
     }
 
+    public Long getId() {
+        return id;
+    }
 
     public int getInventoryId() {
         return inventoryId;

@@ -1,25 +1,32 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
+@Component
 @Entity(name="part_category")
 public class PartCategory {
 
     @Id
-    final int partId;
-    final String categoryName;
+    @Column(name="category_id")
+    protected int partCategoryId;
+    @Column(name="category_name", length = 255)
+    protected String categoryName;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
+
+    public PartCategory(){}
 
     public PartCategory(int partId, String categoryName){
-        this.partId = partId;
+        this.partCategoryId = partId;
         this.categoryName = categoryName;
         hashCode = -1;
     }
 
-    public int getPartId() {
-        return partId;
+    public int getPartCategoryId() {
+        return partCategoryId;
     }
 
     public String getCategoryName() {
@@ -28,7 +35,7 @@ public class PartCategory {
 
     @Override
     public boolean equals(Object obj) {
-        return this.partId == ((PartCategory)obj).getPartId()
+        return this.partCategoryId == ((PartCategory)obj).getPartCategoryId()
                 && this.categoryName.equals(((PartCategory)obj).getCategoryName());
     }
 
@@ -37,7 +44,7 @@ public class PartCategory {
         if(hashCode == -1) {
             final int prime = 43;
             int result = 41;
-            result = prime * result + partId;
+            result = prime * result + partCategoryId;
             result = prime * result + (categoryName == null ? 0 : categoryName.hashCode());
             hashCode = result;
         }

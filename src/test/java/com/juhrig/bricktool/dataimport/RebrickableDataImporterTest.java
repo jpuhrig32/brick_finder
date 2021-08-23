@@ -47,11 +47,11 @@ class RebrickableDataImporterTest {
     void readElementCsv() {
         int expectedObjectCount = 5;
         Element[] expectedObjectsArray = new Element[]{
-                new Element(4275423, "53657", 1004),
-                new Element(6194308, "92926", 71),
-                new Element(6229123, "26561", 4),
-                new Element(4241969, "51035", 1004),
-                new Element(4257250, "50899pat0001", -1)
+                new Element("4275423", "53657", 1004),
+                new Element("6194308", "92926", 71),
+                new Element("6229123", "26561", 4),
+                new Element("4241969", "51035", 1004),
+                new Element("4257250", "50899pat0001", -1)
         };
         List<Element> expectedObjects = Arrays.asList(expectedObjectsArray);
 
@@ -137,11 +137,11 @@ class RebrickableDataImporterTest {
     void readInventoryPartCsv(){
         int expectedObjectCount = 5;
         InventoryPart[] expectedObjectsArray = new InventoryPart[]{
-                new InventoryPart(1, "48379c01", "72", 1, false),
-                new InventoryPart(1, "48395", "7", 1, false),
-                new InventoryPart(1, "stickerupn0077", "9999", 1, false),
-                new InventoryPart(1, "upn0342", "0", 1, false),
-                new InventoryPart(1, "upn0350", "25", 1, false),
+                new InventoryPart(1, "48379c01", 72, 1, false),
+                new InventoryPart(1, "48395", 7, 1, false),
+                new InventoryPart(1, "stickerupn0077", 9999, 1, false),
+                new InventoryPart(1, "upn0342", 0, 1, false),
+                new InventoryPart(1, "upn0350", 25, 1, false),
         };
         List<InventoryPart> expectedObjects = Arrays.asList(expectedObjectsArray);
 

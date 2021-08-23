@@ -7,41 +7,45 @@ import com.juhrig.bricktool.datasource.repositories.InventoryPartRepository;
 import com.juhrig.bricktool.datasource.repositories.InventoryRepository;
 import com.juhrig.bricktool.datasource.repositories.InventorySetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Entity(name="set")
+@Component
+@Entity(name="part_set")
 public class Set extends BrickCart
 {
     @Id
-    final String setNumber;
-    final String name;
-    final int year;
-    final int themeId;
-    final int numParts;
+    @Column(name = "set_number", length = 32)
+    protected String setNumber;
+    @Column(name="set_name", length = 128)
+    protected String name;
+    @Column(name="release_year")
+    protected int year;
+    @Column(name="set_theme_id")
+    protected int themeId;
+    @Column(name="part_count")
+    protected int numParts;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
 
     @Transient
     List<InventorySet> setInventories;
 
-
-
     @Transient
     boolean isBrickInventoryDirty;
 
-    @Autowired
-    @Transient
-    InventorySetRepository inventorySetRepository;
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "parentSet")
+    List<InventorySet> setInventoryList;
 
-    @Autowired
-    @Transient
-    InventoryPartRepository inventoryPartRepository;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="set_theme", referencedColumnName = "theme_id")
+    Theme setTheme;
 
-
+    public Set(){}
 
     public Set(String setNumber, String name, int year, int themeId, int numParts){
         super(null);
@@ -74,34 +78,10 @@ public class Set extends BrickCart
         return numParts;
     }
 
-    public List<InventorySet> getSetInventorySets() {
-        if(setInventories == null){
-            setInventories = inventorySetRepository.getInventorySetsBySet(setNumber);
-            Map<Integer, InventorySet> inventoriesById = new LinkedHashMap();
-            for(InventorySet is : setInventories){
-                if(inventoriesById.containsKey(is.getInventoryId())){
-                    InventorySet old = inventoriesById.get(is.getInventoryId());
-                    if(old.getRevision() < is.getRevision()){
-                        inventoriesById.put(is.getInventoryId(), is);
-                    }
-                }
-            }
-            setInventories = inventoriesById.entrySet().stream()
-                    .map(ibi -> ibi.getValue())
-                    .collect(Collectors.toList());
-        }
-        return setInventories;
-    }
+
 
     @Override
     public List<InventoryPart> getBricks() {
-        if(this.bricks == null){
-            getSetInventorySets();
-            List<Integer> inventoryIds = setInventories.stream()
-                    .map(si -> si.getInventoryId())
-                    .collect(Collectors.toList());
-            this.bricks = inventoryPartRepository.getAllPartsByInventoryIds(inventoryIds);
-        }
         return super.getBricks();
     }
 
@@ -158,4 +138,5 @@ public class Set extends BrickCart
         }
         return hashCode;
     }
+
 }

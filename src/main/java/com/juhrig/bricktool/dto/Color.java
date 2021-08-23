@@ -1,20 +1,26 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
-@Entity(name="color")
+@Entity(name="color_entity")
 public class Color{
 
-
     @Id
-    final int colorId;
-    final String colorName;
-    final String colorRGB;
-    final boolean isTrans;
+    @Column(name = "color_id", nullable = false, unique = true)
+    int colorId;
+    @Column(name="color_name", length = 32)
+    String colorName;
+    @Column(name="color_rgb", length = 32)
+    String colorRGB;
+    @Column(name="is_transparent")
+    boolean isTrans;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
 
+    public Color(){}
     public Color(int colorId, String colorName, String colorRGB, boolean isTrans){
         this.colorId = colorId;
         this.colorName = colorName;

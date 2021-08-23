@@ -1,47 +1,112 @@
 package com.juhrig.bricktool.controllers;
 
 import com.juhrig.bricktool.dataimport.RebrickableDataImporter;
+import com.juhrig.bricktool.datasource.repositories.SetRepository;
+import com.juhrig.bricktool.dto.Set;
+import com.vaadin.flow.component.html.Input;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/databaseControl")
+//@RequestMapping("/databaseControl")
 public class DatabaseController {
 
+    @Autowired
+    SetRepository setRepository;
+
+    @Autowired
+    RebrickableDataImporter rbi;
+
+    Map<String, InputStream> rebrickableFiles;
+
+    public DatabaseController(){
+        rebrickableFiles = new HashMap<>();
+        try {
+            rebrickableFiles.put(RebrickableDataImporter.SET, new FileInputStream(Paths.get("./resources/static/sets.csv").toFile()));
+            //InputStream setFile = new FileInputStream(Paths.get("./resources/static/sets.csv").toFile());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     @GetMapping("purgeandreload")
-    public void purgeAndReloadDatabase(){
-        RebrickableDataImporter rbi = new RebrickableDataImporter();
-        Map<String, InputStream> inputFiles = Map.of(
-                RebrickableDataImporter.COLOR,
-                DatabaseController.class.getResourceAsStream("static/colors.csv"),
-                RebrickableDataImporter.ELEMENT,
-                DatabaseController.class.getResourceAsStream("static/elements.csv"),
-                RebrickableDataImporter.INVENTORY,
-                DatabaseController.class.getResourceAsStream("static/inventories.csv"),
-                RebrickableDataImporter.INVENTORY_MINIFIG,
-                DatabaseController.class.getResourceAsStream("static/inventory_minifigs.csv"),
-                RebrickableDataImporter.INVENTORY_PART,
-                DatabaseController.class.getResourceAsStream("static/inventory_parts.csv"),
-                RebrickableDataImporter.INVENTORY_SET,
-                DatabaseController.class.getResourceAsStream("static/inventory_sets.csv"),
-                RebrickableDataImporter.MINIFIG,
-                DatabaseController.class.getResourceAsStream("static/minifigs.csv"),
-                RebrickableDataImporter.PART,
-                DatabaseController.class.getResourceAsStream("static/parts.csv"),
-                RebrickableDataImporter.PART_RELATIONSHIP,
-                DatabaseController.class.getResourceAsStream("static/part_relationships.csv"),
-                RebrickableDataImporter.SET,
-                DatabaseController.class.getResourceAsStream("static/sets.csv")
-        );
-        inputFiles.put(
-                RebrickableDataImporter.THEME,
-                DatabaseController.class.getResourceAsStream("static/themes.csv")
-        );
-        rbi.importRebrickableData(inputFiles, true);
+    public List<Set> purgeAndReloadDatabase(){
+        Map<String, InputStream> inputFileMap = new LinkedHashMap<>();
+        try {
+            inputFileMap.put(
+                    RebrickableDataImporter.COLOR,
+                    new FileInputStream(Paths.get("./resources/static/colors.csv").toFile())
+            );
+            inputFileMap.put(
+                    RebrickableDataImporter.MINIFIG,
+                    new FileInputStream(Paths.get("./resources/static/minifigs.csv").toFile())
+            );
+            inputFileMap.put(
+                    RebrickableDataImporter.PART_CATEGORY,
+                    new FileInputStream(Paths.get("./resources/static/part_categories.csv").toFile())
+            );
+            inputFileMap.put(
+                    RebrickableDataImporter.PART,
+                    new FileInputStream(Paths.get("./resources/static/parts.csv").toFile())
+            );
+            /*
+            inputFileMap.put(
+                    RebrickableDataImporter.PART_RELATIONSHIP,
+                    new FileInputStream(Paths.get("./resources/static/part_relationships.csv").toFile())
+            );
+
+             */
+            inputFileMap.put(
+                    RebrickableDataImporter.THEME,
+                    new FileInputStream(Paths.get("./resources/static/themes.csv").toFile())
+            );
+            inputFileMap.put(
+                    RebrickableDataImporter.ELEMENT,
+                    new FileInputStream(Paths.get("./resources/static/elements.csv").toFile())
+            );
+            inputFileMap.put(
+                    RebrickableDataImporter.INVENTORY,
+                    new FileInputStream(Paths.get("./resources/static/inventories.csv").toFile())
+            );
+
+            inputFileMap.put(
+                    RebrickableDataImporter.SET,
+                    new FileInputStream(Paths.get("./resources/static/sets.csv").toFile())
+            );
+            inputFileMap.put(
+                    RebrickableDataImporter.INVENTORY_SET,
+                    new FileInputStream(Paths.get("./resources/static/inventory_sets.csv").toFile())
+            );
+            inputFileMap.put(
+                    RebrickableDataImporter.INVENTORY_MINIFIG,
+                    new FileInputStream(Paths.get("./resources/static/inventory_minifigs.csv").toFile())
+            );
+            inputFileMap.put(
+                    RebrickableDataImporter.INVENTORY_PART,
+                    new FileInputStream(Paths.get("./resources/static/inventory_parts.csv").toFile())
+            );
+
+
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+            rbi.importRebrickableData(inputFileMap, true);
+
+            return setRepository.findAll();
+
     }
 }

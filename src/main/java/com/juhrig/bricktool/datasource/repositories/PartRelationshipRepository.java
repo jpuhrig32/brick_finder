@@ -10,16 +10,16 @@ import java.util.List;
 
 public interface PartRelationshipRepository extends JpaRepository<PartRelationship, Integer> {
 
-    @Query(value="SELECT t from PartRelationship t where t.childPartNumber = 1?")
+    @Query(value="SELECT t from PartRelationship t where t.childPartNumber = 1?", nativeQuery = true)
     List<PartRelationship> findByChildPartNumber(String childPartNumber);
 
-    @Query(value ="SELECT t from PartRelationship t where t.childPartNumber in :childPartNumbers")
+    @Query(value ="SELECT t from PartRelationship t where t.childPartNumber in :childPartNumbers", nativeQuery = true)
     List<PartRelationship> findAllByChildPartNumber(@Param("childPartNumbers") List<String> childPartNumbers);
 
-    @Query(value="SELECT t from PartRelationship t where t.parentPartNumber = 1?")
+    @Query(value="SELECT t from PartRelationship t where t.parentPartNumber = 1?", nativeQuery = true)
     List<PartRelationship> findByParentPartNumber(String parentPartNumber);
 
-    @Query(value ="SELECT t from PartRelationship t where t.parentPartNumber in :parentPartNumbers")
+    @Query(value ="SELECT t from PartRelationship t where t.parentPartNumber in :parentPartNumbers", nativeQuery = true)
     List<PartRelationship> findAllByParentPartNumber(@Param("parentPartNumbers") List<String> parentPartNumbers);
 
 }

@@ -1,18 +1,26 @@
 package com.juhrig.bricktool.dataimport;
 
+import com.juhrig.bricktool.datasource.directaccess.DTOInsertion;
 import com.juhrig.bricktool.datasource.repositories.*;
 import com.juhrig.bricktool.dto.*;
+import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class RebrickableDataImporter {
     
     public static final String BRICK = "brick";
@@ -24,9 +32,11 @@ public class RebrickableDataImporter {
     public static final String INVENTORY_SET = "inventory_set";
     public static final String MINIFIG = "minifig";
     public static final String PART = "part";
+    public static final String PART_CATEGORY = "part_category";
     public static final String PART_RELATIONSHIP = "part_relationship";
     public static final String SET = "set";
     public static final String THEME = "theme";
+
 
     private static final Logger LOG = LoggerFactory.getLogger(RebrickableDataImporter.class);
 
@@ -55,10 +65,13 @@ public class RebrickableDataImporter {
     MinifigRepository minifigRepository;
 
     @Autowired
-    PartRelationshipRepository partRelationshipRepository;
+    PartRepository partRepository;
 
     @Autowired
-    PartRepository partRepository;
+    PartCategoryRepository partCategoryRepository;
+
+    @Autowired
+    PartRelationshipRepository partRelationshipRepository;
 
     @Autowired
     SetRepository setRepository;
@@ -66,13 +79,17 @@ public class RebrickableDataImporter {
     @Autowired 
     ThemeRepository themeRepository;
 
+    @Autowired
+    DTOInsertion directAccessObject;
+
+
+
     public void importRebrickableData(Map<String, InputStream> rebrickableFiles){
         importRebrickableData(rebrickableFiles, false);
     }
 
     public void importRebrickableData(Map<String, InputStream> rebrickableFiles, boolean purge){
         if(purge){
-            brickRepository.deleteAll();
             colorRepository.deleteAll();
             elementRepository.deleteAll();
             inventoryRepository.deleteAll();
@@ -86,7 +103,14 @@ public class RebrickableDataImporter {
             themeRepository.deleteAll();
         }
         for(Map.Entry<String, InputStream> entry : rebrickableFiles.entrySet()){
+            if(entry.getValue() == null){
+                LOG.warn(String.format("Entry %s had a null InputStream", entry.getKey()));
+                continue;
+            }
             List<String[]> lines = readCsvLines(entry.getValue());
+            if(lines.size() == 0){
+                continue;
+            }
             switch(entry.getKey()){
                 case BRICK:
                     List<Brick> bricks = readBrickCsv(lines);
@@ -106,11 +130,11 @@ public class RebrickableDataImporter {
                     break;
                 case INVENTORY_MINIFIG:
                     List<InventoryMinifig> inventoryMinifigs = readInventoryMinifigCsv(lines);
-                    inventoryMinifigRepository.saveAll(inventoryMinifigs);
+                    directAccessObject.insertInventoryMinifigObjects(inventoryMinifigs);
                     break;
                 case INVENTORY_PART:
                     List<InventoryPart> inventoryParts = readInventoryPartCsv(lines);
-                    inventoryPartRepository.saveAll(inventoryParts);
+                    directAccessObject.insertInventoryPartObjects(inventoryParts);
                     break;
                 case INVENTORY_SET:
                     List<InventorySet> inventorySets = readInventorySetCsv(lines);
@@ -124,9 +148,13 @@ public class RebrickableDataImporter {
                     List<Part> parts = readPartCsv(lines);
                     partRepository.saveAll(parts);
                     break;
+                case PART_CATEGORY:
+                    List<PartCategory> categories = readPartCategoryCsv(lines);
+                    partCategoryRepository.saveAll(categories);
+                    break;
                 case PART_RELATIONSHIP:
                     List<PartRelationship> partRelationships = readPartRelationshipCsv(lines);
-                    partRelationshipRepository.saveAll(partRelationships);
+                    directAccessObject.insertPartRelationshipObjects(partRelationships);
                     break;
                 case SET:
                     List<Set> sets = readSetCsv(lines);
@@ -166,7 +194,7 @@ public class RebrickableDataImporter {
         return lines.stream()
                 .filter(line -> line.length == 3)
                 .map(line ->{
-                    return new Element(Integer.parseInt(line[0]),line[1],Integer.parseInt(line[2]));
+                    return new Element(line[0],line[1],Integer.parseInt(line[2]));
                 })
                 .collect(Collectors.toList());
     }
@@ -192,7 +220,7 @@ public class RebrickableDataImporter {
         return lines.stream()
                 .filter(line -> line.length == 5)
                 .map(line ->{
-                    return new InventoryPart(Integer.parseInt(line[0]),line[1],line[2], Integer.parseInt(line[3]), Boolean.parseBoolean(line[4]));
+                    return new InventoryPart(Integer.parseInt(line[0]),line[1], Integer.parseInt(line[2]), Integer.parseInt(line[3]), Boolean.parseBoolean(line[4]));
                 })
                 .collect(Collectors.toList());
     }
@@ -261,15 +289,23 @@ public class RebrickableDataImporter {
     }
 
     protected List<String[]> readCsvLines(InputStream fileInput){
-        BufferedReader br = new BufferedReader(new InputStreamReader(fileInput));
-        List<String[]> lines = br.lines()
-                .map(line -> {
-                    List<String> sl = ImportUtils.splitLineOnDelimiter(line, ',');
-                    return sl.toArray(new String[sl.size()]);
-                })
-                .collect(Collectors.toList());
-        lines.remove(0);
-        return lines;
+            BufferedReader br = new BufferedReader(new InputStreamReader(fileInput));
+            List<String[]> lines = br.lines()
+                    .map(line -> {
+                        if(line.length() > 0) {
+                            List<String> sl = ImportUtils.splitLineOnDelimiter(line, ',');
+                            return sl.toArray(new String[sl.size()]);
+                        }
+                        else{
+                            return new String[0];
+                        }
+                    })
+                    .filter(line -> line.length > 0)
+                    .collect(Collectors.toList());
+            if(lines.size() > 0) {
+                lines.remove(0);
+            }
+            return lines;
     }
 
 

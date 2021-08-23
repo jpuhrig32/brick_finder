@@ -85,11 +85,13 @@ public class BrickCart {
             bricks.add(toAdd);
             brickMap.put(toAdd.getPartNumber(), toAdd);
         }
+        buildBrickMap();
     }
 
     public void addCart(BrickCart toAdd){
         toAdd.getBricks().stream().forEach(b ->
                 addBrick(b));
+        buildBrickMap();
     }
 
     public List<InventoryPart> getBricks() {
@@ -101,10 +103,12 @@ public class BrickCart {
        Collections.sort(bricks);
     }
 
-    private void buildBrickMap(){
-        brickMap = new LinkedHashMap<String, InventoryPart>();
-        bricks.stream().forEach(b -> {
-            brickMap.put(b.getPartNumber(), b);
-        });
+    private void buildBrickMap() {
+        if (bricks != null) {
+            brickMap = new LinkedHashMap<String, InventoryPart>();
+            bricks.stream().forEach(b -> {
+                brickMap.put(b.getPartNumber(), b);
+            });
+        }
     }
 }

@@ -1,18 +1,42 @@
 package com.juhrig.bricktool.dto;
 
-import javax.persistence.*;
+import org.springframework.stereotype.Component;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Component
 @Entity(name="inventory_set")
 public class InventorySet {
 
 
     @Id
-    final int inventoryId;
-    final String setNumber;
-    final int quantity;
-    int revision;
-    int hashCode;
+    @Column(name="inventory_id", nullable = false)
+    protected int inventoryId;
 
+    @Column(name="set_number", length=32)
+    protected String setNumber;
+
+    @Column(name="set_quantity")
+    protected int quantity;
+
+    @Column(name="revision_number")
+    protected int revision;
+
+    @Transient
+    protected int hashCode;
+
+    @ManyToOne
+    @JoinColumn(name="parent_set_number", referencedColumnName = "set_number")
+    Set parentSet;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="parentSet")
+    List<InventoryMinifig> minifigs;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentSet")
+    List<InventoryPart> parts;
+
+    public InventorySet(){}
 
     public InventorySet(int inventoryId, String setNumber, int quantity){
         this(inventoryId, setNumber, quantity, 1);
@@ -53,15 +77,13 @@ public class InventorySet {
 
     @Override
     public int hashCode() {
-        if(hashCode == -1) {
-            final int prime = 73;
-            int result = 101;
-            result = prime * result + inventoryId;
-            result = prime * result + quantity;
-            result = prime * result + revision;
-            result = prime * result + (setNumber == null ? 0 : setNumber.hashCode());
-            hashCode = result;
-        }
+        final int prime = 73;
+        int result = 101;
+        result = prime * result + inventoryId;
+        result = prime * result + quantity;
+        result = prime * result + revision;
+        result = prime * result + (setNumber == null ? 0 : setNumber.hashCode());
+        hashCode = result;
         return hashCode;
     }
 }

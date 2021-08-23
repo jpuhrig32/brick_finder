@@ -1,25 +1,56 @@
 package com.juhrig.bricktool.dto;
 
+import com.helger.commons.annotation.CodingStyleguideUnaware;
 import org.springframework.data.relational.core.sql.In;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Component
 @Entity(name="inventory_part")
 public class InventoryPart implements Comparable<InventoryPart>{
 
     @Id
-    final String partNumber;
-    final int inventoryId;
-    final String colorId;
-    int quantity;
-    boolean isSpare;
+    //@GeneratedValue(strategy =GenerationType.SEQUENCE, generator="inventory_part_id_seq")
+    @SequenceGenerator(name="inventory_part_id_seq", sequenceName = "inventory_part_id_seq", allocationSize = 50)
+    @Column(name="id")
+    long id;
+
+    @Column(name="part_number", length = 32)
+    protected String partNumber;
+    @Column(name="inventory_id")
+    protected int inventoryId;
+    @Column(name="color_id")
+    protected int colorId;
+    @Column(name="quantity")
+    protected int quantity;
+    @Column(name="is_spare_part")
+    protected boolean isSpare;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
 
-    public InventoryPart(int inventoryId, String partNumber, String colorId, int quantity, boolean isSpare){
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ref_inventory_id", referencedColumnName = "inventory_id")
+    InventorySet parentSet;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ref_color_id", referencedColumnName = "color_id")
+    Color partColor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ref_part_number", referencedColumnName = "part_number")
+    Part part;
+
+
+
+
+    public InventoryPart(){}
+
+    public InventoryPart(int inventoryId, String partNumber, int colorId, int quantity, boolean isSpare){
         this.inventoryId = inventoryId;
         this.partNumber = partNumber;
         this.colorId = colorId;
@@ -40,7 +71,7 @@ public class InventoryPart implements Comparable<InventoryPart>{
         return partNumber;
     }
 
-    public String getColorId() {
+    public int getColorId() {
         return colorId;
     }
 
@@ -64,7 +95,7 @@ public class InventoryPart implements Comparable<InventoryPart>{
     public boolean isSamePart(InventoryPart toCompare){
         return (this.inventoryId == toCompare.getInventoryId()
                 && this.partNumber.equals(toCompare.getPartNumber())
-                && this.colorId.equals(toCompare.getColorId()));
+                && this.colorId == toCompare.getColorId());
     }
 
     @Override
@@ -83,7 +114,7 @@ public class InventoryPart implements Comparable<InventoryPart>{
             int result = 101;
             result = prime * result + inventoryId;
             result = prime * result + (isSpare ? 0 : 1);
-            result = prime * result + (colorId == null ? 0 : colorId.hashCode());
+            result = prime * result + colorId;
             result = prime * result + (partNumber == null ? 0 : partNumber.hashCode());
             hashCode = result;
         }

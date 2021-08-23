@@ -1,17 +1,29 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
+@Component
 @Entity(name="inventory")
 public class Inventory {
 
     @Id
-    final int inventoryId;
-    final int version;
-    final String setNumber;
+    @Column(name="inventory_id", nullable = false, unique = true)
+    protected int inventoryId;
+    @Column(name="version_number")
+    protected int version;
+    @Column(name="set_number", length = 32)
+    protected String setNumber;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
+
+    @ManyToOne
+    @JoinColumn(name="parent_set_number", referencedColumnName = "set_number")
+    Set parentSet;
+
+    public Inventory(){}
 
     public Inventory(int inventoryId, int version, String setNumber){
         this.inventoryId = inventoryId;

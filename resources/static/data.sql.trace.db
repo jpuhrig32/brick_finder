@@ -1,0 +1,24 @@
+2021-08-20 23:22:22 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "COLOR_ENTITY" not found; SQL statement:
+select color0_.color_id as color_id1_1_, color0_.color_name as color_na2_1_, color0_.colorrgb as colorrgb3_1_, color0_.is_trans as is_trans4_1_ from color_entity color0_ [42102-200]
+2021-08-21 17:56:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "COLOR_ENTITY" not found; SQL statement:
+select color0_.color_id as color_id1_1_, color0_.color_name as color_na2_1_, color0_.colorrgb as colorrgb3_1_, color0_.is_trans as is_trans4_1_ from color_entity color0_ [42102-200]
+2021-08-21 17:57:49 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "color_entity" not found; SQL statement:
+select color0_.color_id as color_id1_1_, color0_.color_name as color_na2_1_, color0_.colorrgb as colorrgb3_1_, color0_.is_trans as is_trans4_1_ from color_entity color0_ [42102-200]
+2021-08-21 17:58:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "color_entity" not found; SQL statement:
+select color0_.color_id as color_id1_1_, color0_.color_name as color_na2_1_, color0_.colorrgb as colorrgb3_1_, color0_.is_trans as is_trans4_1_ from color_entity color0_ [42102-200]
+2021-08-21 18:01:21 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "set" not found; SQL statement:
+select set0_.set_number as set_numb1_11_0_, set0_.name as name2_11_0_, set0_.num_parts as num_part3_11_0_, set0_.theme_id as theme_id4_11_0_, set0_.year as year5_11_0_ from set set0_ where set0_.set_number=? [42102-200]
+2021-08-21 18:41:17 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "set" not found; SQL statement:
+select set0_.set_number as set_numb1_11_0_, set0_.name as name2_11_0_, set0_.num_parts as num_part3_11_0_, set0_.theme_id as theme_id4_11_0_, set0_.year as year5_11_0_ from set set0_ where set0_.set_number=? [42102-200]
+2021-08-21 18:42:54 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "set" not found; SQL statement:
+select set0_.set_number as set_numb1_11_0_, set0_.name as name2_11_0_, set0_.num_parts as num_part3_11_0_, set0_.theme_id as theme_id4_11_0_, set0_.year as year5_11_0_ from set set0_ where set0_.set_number=? [42102-200]
+2021-08-21 20:28:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "part_set" not found; SQL statement:
+select set0_.set_number as set_numb1_11_0_, set0_.name as name2_11_0_, set0_.num_parts as num_part3_11_0_, set0_.theme_id as theme_id4_11_0_, set0_.year as year5_11_0_ from part_set set0_ where set0_.set_number=? [42102-200]

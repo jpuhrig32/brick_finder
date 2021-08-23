@@ -1,23 +1,34 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
+@Component
 @Entity(name="part")
 public class Part {
 
     @Id
-    final String partNumber;
-    final String name;
-    final int partCatalogId;
-    final String partMaterial;
+    @Column(name="part_number", length = 32, nullable = false)
+    protected String partNumber;
+
+    @Column(name="part_name", length = 255)
+    protected String name;
+    @Column(name="part_catalog_id")
+    protected int partCategoryId;
+    @Column(name="part_material", length = 32)
+    protected String partMaterial;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
 
-    public Part(String partNumber, String name, int partCatalogId, String partMaterial){
+
+    public Part(){}
+
+    public Part(String partNumber, String name, int partCategoryId, String partMaterial){
         this.partNumber = partNumber;
         this.name = name;
-        this.partCatalogId = partCatalogId;
+        this.partCategoryId = partCategoryId;
         this.partMaterial = partMaterial;
         hashCode = -1;
     }
@@ -31,8 +42,8 @@ public class Part {
         return name;
     }
 
-    public int getPartCatalogId() {
-        return partCatalogId;
+    public int getPartCategoryId() {
+        return partCategoryId;
     }
 
     public String getPartMaterial() {
@@ -44,7 +55,7 @@ public class Part {
         return (
                 this.partNumber.equals(((Part)obj).getPartNumber())
                 && this.name.equals(((Part)obj).getName())
-                && this.partCatalogId == ((Part)obj).getPartCatalogId()
+                && this.partCategoryId == ((Part)obj).getPartCategoryId()
                 && this.partMaterial.equals(((Part)obj).getPartMaterial())
                 );
     }
@@ -55,7 +66,7 @@ public class Part {
             final int prime = 43;
             int result = 53;
             result = prime * result + (partNumber == null ? 0 : partNumber.hashCode());
-            result = prime * result + partCatalogId;
+            result = prime * result + partCategoryId;
             result = prime * result + (name == null ? 0 : name.hashCode());
             result = prime * result + (partMaterial == null ? 0 : partMaterial.hashCode());
             hashCode = result;
@@ -65,6 +76,6 @@ public class Part {
 
     @Override
     public String toString(){
-        return String.format("Part Catalog Id: (%d) | Part number: (%s) | name: (%s) | part material: (%s)", partCatalogId, partNumber, name, partMaterial);
+        return String.format("Part Catalog Id: (%d) | Part number: (%s) | name: (%s) | part material: (%s)", partCategoryId, partNumber, name, partMaterial);
     }
 }

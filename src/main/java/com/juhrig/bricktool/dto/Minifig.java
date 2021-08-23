@@ -1,17 +1,25 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
+@Component
 @Entity(name="minifig")
 public class Minifig {
 
     @Id
-    final String minifigId;
-    final String name;
-    final int numParts;
+    @Column(name="minifig_id", unique = true, nullable = false)
+    protected String minifigId;
+    @Column(name="minifig_name", length = 255)
+    protected String name;
+    @Column(name="part_count")
+    protected int numParts;
 
     @Transient
-    int hashCode;
+    protected int hashCode;
+
+    public Minifig(){}
 
     public Minifig(String minifigId, String name, int numParts){
         this.minifigId = minifigId;

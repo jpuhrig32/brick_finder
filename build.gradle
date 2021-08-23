@@ -27,11 +27,14 @@ dependencies {
 	implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.5.2.Final'
 	implementation group: 'com.opencsv', name:'opencsv', version: '5.4'
 	runtimeOnly 'com.h2database:h2'
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
+
 
 	//runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation group: 'com.opencsv', name:'opencsv', version: '5.4'
 	testImplementation group: 'org.hibernate', name: 'hibernate-core', version: '5.5.2.Final'
+	testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
 }
 
 dependencyManagement {

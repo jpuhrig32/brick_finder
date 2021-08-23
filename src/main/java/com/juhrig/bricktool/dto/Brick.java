@@ -1,8 +1,11 @@
 package com.juhrig.bricktool.dto;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Component
 @Entity(name="brick")
 public class Brick {
 
@@ -18,7 +21,7 @@ public class Brick {
     @Column(name = "id", unique = true, nullable = false, insertable = false, updatable = false)
     private Integer id;
 
-
+    public Brick(){}
 
     public Brick(String partNum, String description,  int catalogId, String material){
         this.partNum = partNum;
