@@ -1,11 +1,6 @@
 package com.juhrig.bricktool.carts;
 
-
-import com.juhrig.bricktool.dto.Brick;
-import com.juhrig.bricktool.dto.Set;
-
-import javax.persistence.Entity;
-import java.util.List;
+import com.juhrig.bricktool.datasource.dto.SetImpl;
 
 //@Entity
 public class UserBrickInventory extends BrickCart {
@@ -18,17 +13,10 @@ public class UserBrickInventory extends BrickCart {
         this.inventoryName = inventoryName;
     }
 
-    public void addSet(Set brickSet){
+    public void addSet(SetImpl brickSet){
 
     }
 
-    public void addBrick(Brick brick){
-
-    }
-
-    public void addBricks(List<Brick> bricks){
-
-    }
 
 
 }

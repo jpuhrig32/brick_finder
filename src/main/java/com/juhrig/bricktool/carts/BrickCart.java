@@ -1,7 +1,7 @@
 package com.juhrig.bricktool.carts;
 
-import com.juhrig.bricktool.dto.Brick;
-import com.juhrig.bricktool.dto.InventoryPart;
+import com.juhrig.bricktool.datasource.dto.InventoryPart;
+import com.juhrig.bricktool.datasource.dto.InventoryPartImpl;
 
 import javax.persistence.Transient;
 import java.util.*;
@@ -42,10 +42,10 @@ public class BrickCart {
         while(keepLooping){
             if(bricks.get(thisIndex).isSamePart(compList.get(compIndex))){
                 int matchingQuantity = Math.min(bricks.get(thisIndex).getQuantity(),compList.get(compIndex).getQuantity());
-                matchingPieceCart.addBrick(new InventoryPart(bricks.get(thisIndex), matchingQuantity));
+                matchingPieceCart.addBrick(new InventoryPartImpl(bricks.get(thisIndex), matchingQuantity));
                 matchingPieces += matchingQuantity;
                 if(bricks.get(thisIndex).getQuantity() < compList.get(compIndex).getQuantity()){
-                   missingPieceCart.addBrick(new InventoryPart(bricks.get(thisIndex), compList.get(compIndex).getQuantity() - bricks.get(thisIndex).getQuantity()));
+                   missingPieceCart.addBrick(new InventoryPartImpl(bricks.get(thisIndex), compList.get(compIndex).getQuantity() - bricks.get(thisIndex).getQuantity()));
                 }
                 compIndex++;
                 thisIndex++;

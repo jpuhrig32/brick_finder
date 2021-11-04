@@ -1,6 +1,6 @@
 package com.juhrig.bricktool.datasource.repositories;
 
-import com.juhrig.bricktool.dto.InventoryPart;
+import com.juhrig.bricktool.datasource.dto.InventoryPart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

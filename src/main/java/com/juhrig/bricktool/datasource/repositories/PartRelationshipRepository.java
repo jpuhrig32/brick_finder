@@ -1,25 +1,24 @@
 package com.juhrig.bricktool.datasource.repositories;
 
-import com.juhrig.bricktool.dto.Part;
-import com.juhrig.bricktool.dto.PartRelationship;
+import com.juhrig.bricktool.datasource.dto.PartRelationshipImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PartRelationshipRepository extends JpaRepository<PartRelationship, Integer> {
+public interface PartRelationshipRepository extends JpaRepository<PartRelationshipImpl, Integer> {
 
     @Query(value="SELECT t from PartRelationship t where t.childPartNumber = 1?", nativeQuery = true)
-    List<PartRelationship> findByChildPartNumber(String childPartNumber);
+    List<PartRelationshipImpl> findByChildPartNumber(String childPartNumber);
 
     @Query(value ="SELECT t from PartRelationship t where t.childPartNumber in :childPartNumbers", nativeQuery = true)
-    List<PartRelationship> findAllByChildPartNumber(@Param("childPartNumbers") List<String> childPartNumbers);
+    List<PartRelationshipImpl> findAllByChildPartNumber(@Param("childPartNumbers") List<String> childPartNumbers);
 
     @Query(value="SELECT t from PartRelationship t where t.parentPartNumber = 1?", nativeQuery = true)
-    List<PartRelationship> findByParentPartNumber(String parentPartNumber);
+    List<PartRelationshipImpl> findByParentPartNumber(String parentPartNumber);
 
     @Query(value ="SELECT t from PartRelationship t where t.parentPartNumber in :parentPartNumbers", nativeQuery = true)
-    List<PartRelationship> findAllByParentPartNumber(@Param("parentPartNumbers") List<String> parentPartNumbers);
+    List<PartRelationshipImpl> findAllByParentPartNumber(@Param("parentPartNumbers") List<String> parentPartNumbers);
 
 }

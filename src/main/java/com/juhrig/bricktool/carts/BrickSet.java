@@ -1,7 +1,9 @@
 package com.juhrig.bricktool.carts;
 
-import com.juhrig.bricktool.dto.InventoryPart;
-import com.juhrig.bricktool.dto.Minifig;
+import com.juhrig.bricktool.datasource.dto.InventoryPart;
+import com.juhrig.bricktool.datasource.dto.InventoryPartImpl;
+import com.juhrig.bricktool.datasource.dto.Minifig;
+import com.juhrig.bricktool.datasource.dto.MinifigImpl;
 
 import java.util.ArrayList;
 import java.util.List;

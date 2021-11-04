@@ -2,12 +2,9 @@ package com.juhrig.bricktool.controllers;
 
 import com.juhrig.bricktool.dataimport.RebrickableDataImporter;
 import com.juhrig.bricktool.datasource.repositories.SetRepository;
-import com.juhrig.bricktool.dto.Set;
-import com.vaadin.flow.component.html.Input;
+import com.juhrig.bricktool.datasource.dto.SetImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileInputStream;
@@ -43,7 +40,7 @@ public class DatabaseController {
     }
 
     @GetMapping("purgeandreload")
-    public List<Set> purgeAndReloadDatabase(){
+    public List<SetImpl> purgeAndReloadDatabase(){
         Map<String, InputStream> inputFileMap = new LinkedHashMap<>();
         try {
             inputFileMap.put(
